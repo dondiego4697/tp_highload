@@ -2,6 +2,7 @@ FROM ubuntu:16.04
 
 MAINTAINER Denis Stepanov
 
+RUN add-apt-repository ppa:openjdk-r/ppa
 RUN apt-get -y update
 
 RUN apt-get install -y openjdk-8-jdk-headless
