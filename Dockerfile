@@ -8,12 +8,12 @@ RUN apt-get install -y openjdk-8-jdk-headless
 RUN apt-get install -y maven
 
 ENV WORK /opt
-ADD . $WORK/work/
+ADD . $WORK/java/
 RUN mkdir -p /var/www/html
 
-WORKDIR $WORK/work
+WORKDIR $WORK/java
 RUN mvn package
 
 EXPOSE 80
 
-CMD java -jar $WORK/work/target/server-1.0-SNAPSHOT.jar
+CMD java -jar $WORK/java/target/server-1.0-SNAPSHOT.jar
