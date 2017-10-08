@@ -7,7 +7,10 @@ import java.net.URLDecoder
 class RequestAnalyser(private val socket: Socket) {
 
     private val availableMethods = arrayListOf("GET", "HEAD")
-    private val rootPath = "./"
+
+    private var CONFIG = ConfigParser().parse()
+    private val rootPath = CONFIG["document_root"]
+
     fun analyse(method: String, path: String) {
         try {
             if (availableMethods.indexOf(method) == -1) {
@@ -23,7 +26,7 @@ class RequestAnalyser(private val socket: Socket) {
                 url += "index.html"
             }
             val file = File(url)
-            System.out.println(file)
+            System.out.println(file.absolutePath)
             if (file.isFile) {
                 Response(socket.getOutputStream(), Status.OK).send(file, "GET" == method)
                 return
@@ -34,6 +37,7 @@ class RequestAnalyser(private val socket: Socket) {
             }
             Response(socket.getOutputStream(), Status.NOT_FOUND).send()
         } catch (e: Exception) {
+            System.out.println(e)
         } finally {
             socket.close()
         }
