@@ -1,4 +1,4 @@
-package denstep
+package sample
 
 enum class Status(val code: Int, val value: String) {
     OK(200, "OK"),

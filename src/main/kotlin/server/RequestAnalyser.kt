@@ -1,4 +1,4 @@
-package denstep
+package sample
 
 import java.io.File
 import java.net.Socket

@@ -1,4 +1,5 @@
-package denstep
+package sample
+
 
 fun main(args: Array<String>) {
     var PORT = 80
@@ -10,4 +11,5 @@ fun main(args: Array<String>) {
     }
     Server(PORT).start()
 }
+
 
