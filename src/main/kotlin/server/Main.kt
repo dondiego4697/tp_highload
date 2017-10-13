@@ -1,5 +1,4 @@
-package sample
-
+package server
 
 fun main(args: Array<String>) {
     var PORT = 80
