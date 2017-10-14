@@ -14,8 +14,8 @@ class Response(private val stream: OutputStream, private val status: Status) {
     fun send(file: File, includeContent: Boolean) {
         val res = baseRes()
         res.appendln("Content-Length: ${file.length()}")
-        getContentType(file.extension)?.let { res.appendln("Content-Type: $it") }
-        res.appendln()
+        getContentType(file.extension)?.let { res.append("Content-Type: $it\r\n\r\n") }
+        System.out.println(res.toString())
         stream.write(createRes(res))
         if (includeContent) {
             file.inputStream().use { it.copyTo(stream) }

@@ -28,7 +28,12 @@ class RequestAnalyser(private val socket: Socket) {
                 url += "index.html"
             }
             val file = File(url)
-            System.out.println("path = " + file.absolutePath)
+            System.out.println("AbsolutePath = " + file.absolutePath)
+            System.out.println("CanonicalPath = " + file.canonicalPath)
+            if (!file.canonicalPath.contains(rootPath.toString())) {
+                Response(socket.getOutputStream(), Status.FORBIDDEN).send()
+                return
+            }
             if (file.isFile) {
                 Response(socket.getOutputStream(), Status.OK).send(file, "GET" == method)
                 return
