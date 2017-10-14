@@ -18,7 +18,8 @@ class RequestAnalyser(private val socket: Socket) {
                 return
             }
             var url = URLDecoder.decode(path, "UTF-8")
-            url = rootPath + "httptest" + url
+            System.out.println(rootPath)
+            url = rootPath + url
             url = url.substringBefore('?')
 
             val isIndex = url.endsWith('/')
