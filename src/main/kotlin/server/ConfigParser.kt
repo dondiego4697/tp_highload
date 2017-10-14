@@ -18,11 +18,7 @@ class ConfigParser {
         val lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)
         for (line in lines) {
             val split = line.split(" ")
-            if (split[0] == "document_root") {
-                result.put(split[0], split[1] + "/httptest")
-            } else {
-                result.put(split[0], split[1])
-            }
+            result.put(split[0], split[1])
         }
         return result
     }

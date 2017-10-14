@@ -18,7 +18,6 @@ class RequestAnalyser(private val socket: Socket) {
                 return
             }
             var url = URLDecoder.decode(path, "UTF-8")
-            System.out.println(rootPath)
             url = rootPath + url
             url = url.substringBefore('?')
 
@@ -27,7 +26,7 @@ class RequestAnalyser(private val socket: Socket) {
                 url += "index.html"
             }
             val file = File(url)
-            System.out.println(file.absolutePath)
+            System.out.println("path = " + file.absolutePath)
             if (file.isFile) {
                 Response(socket.getOutputStream(), Status.OK).send(file, "GET" == method)
                 return

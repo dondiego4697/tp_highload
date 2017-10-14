@@ -18,6 +18,7 @@ class Server(private val port: Int) {
     private fun analyseRequest(socket: Socket) {
         val requestLine = BufferedReader(InputStreamReader(socket.getInputStream())).readLine()
         if (requestLine != null) {
+            System.out.println("requestLint = " + requestLine)
             val split = requestLine.split(" ")
             RequestAnalyser(socket).analyse(split[0], split[1])
         }
