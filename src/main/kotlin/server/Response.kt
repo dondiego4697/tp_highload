@@ -13,9 +13,8 @@ class Response(private val stream: OutputStream, private val status: Status) {
 
     fun send(file: File, includeContent: Boolean) {
         val res = baseRes()
-        res.appendln("Content-Length: ${file.length()}")
+        res.append("Content-Length: ${file.length()}\r\n")
         getContentType(file.extension)?.let { res.append("Content-Type: $it\r\n\r\n") }
-        System.out.println(res.toString())
         stream.write(createRes(res))
         if (includeContent) {
             file.inputStream().use { it.copyTo(stream) }
@@ -30,10 +29,10 @@ class Response(private val stream: OutputStream, private val status: Status) {
         val dateFormat = SimpleDateFormat("EEE, dd MMM, yyyy HH:mm:ss z", Locale.ENGLISH)
         dateFormat.timeZone = TimeZone.getTimeZone("GMT")
         val result = StringBuilder()
-        result.appendln("HTTP/1.1 ${status.code} ${status.value}")
-                .appendln("Date: ${dateFormat.format(Date())}")
-                .appendln("Server: SUPER SERVER")
-                .appendln("Connection: Close")
+        result.append("HTTP/1.1 ${status.code} ${status.value}\r\n")
+                .append("Date: ${dateFormat.format(Date())}\r\n")
+                .append("Server: SUPER SERVER\r\n")
+                .append("Connection: Close\r\n")
         return result
     }
 
