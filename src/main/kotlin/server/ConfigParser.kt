@@ -12,7 +12,7 @@ class ConfigParser {
         val path = "/etc/httpd.conf"
         val confFile = File(path)
         if (!confFile.exists()) {
-            result.put("document_root", "static/")
+            result.put("document_root", "")
             return result
         }
         val lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)
