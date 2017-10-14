@@ -20,7 +20,7 @@ class Server(private val port: Int) {
         if (requestLine != null) {
             System.out.println("requestLint = " + requestLine)
             val split = requestLine.split(" ")
-            RequestAnalyser(socket).analyse(split[0], split[1])
+            RequestAnalyser(socket).analyse(split as ArrayList<String>)
         }
     }
 }

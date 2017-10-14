@@ -11,12 +11,14 @@ class RequestAnalyser(private val socket: Socket) {
     private var CONFIG = ConfigParser().parse()
     private val rootPath = CONFIG["document_root"]
 
-    fun analyse(method: String, path: String) {
+    fun analyse(split: ArrayList<String>) {
         try {
-            if (availableMethods.indexOf(method) == -1) {
+            val method: String = split[0]
+            if (availableMethods.indexOf(method) == -1 || split.size < 3) {
                 Response(socket.getOutputStream(), Status.METHOD_NOT_ALLOWED).send()
                 return
             }
+            val path: String = split[1]
             var url = URLDecoder.decode(path, "UTF-8")
             url = rootPath + url
             url = url.substringBefore('?')
