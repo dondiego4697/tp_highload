@@ -41,8 +41,6 @@ class RequestAnalyser(private val socket: Socket, private val CONFIG: HashMap<St
                 return
             }
             Response(socket.getOutputStream(), Status.NOT_FOUND).send()
-        } catch (e: Exception) {
-            System.out.println(e)
         } finally {
             socket.close()
         }
