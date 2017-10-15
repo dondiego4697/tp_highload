@@ -13,6 +13,7 @@ class ConfigParser {
         val confFile = File(path)
         if (!confFile.exists()) {
             result.put("document_root", "httptest")
+            result.put("cpu_limit", "4")
             return result
         }
         val lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)

@@ -4,11 +4,9 @@ import java.io.File
 import java.net.Socket
 import java.net.URLDecoder
 
-class RequestAnalyser(private val socket: Socket) {
+class RequestAnalyser(private val socket: Socket, private val CONFIG: HashMap<String, String>) {
 
     private val availableMethods = arrayListOf("GET", "HEAD")
-
-    private var CONFIG = ConfigParser().parse()
     private val rootPath = CONFIG["document_root"]
 
     fun analyse(split: ArrayList<String>) {
