@@ -1,13 +1,11 @@
 package server
 
 fun main(args: Array<String>) {
-    var PORT = 80
+    var PORT = 8080
 
-    for (i in args.indices) {
-        if ("-p" == args[i]) {
-            PORT = args[i + 1].toInt()
-        }
-    }
+    args.indices
+            .filter { "-p" == args[it] }
+            .forEach { PORT = args[it + 1].toInt() }
     Server(PORT).start()
 }
 
