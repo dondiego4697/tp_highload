@@ -26,8 +26,8 @@ class RequestAnalyser(private val socket: Socket, private val CONFIG: HashMap<St
                 url += "index.html"
             }
             val file = File(url)
-            System.out.println("AbsolutePath = " + file.absolutePath)
-            System.out.println("CanonicalPath = " + file.canonicalPath)
+            //System.out.println("AbsolutePath = " + file.absolutePath)
+            //System.out.println("CanonicalPath = " + file.canonicalPath)
             if (!file.canonicalPath.contains(rootPath.toString())) {
                 Response(socket.getOutputStream(), Status.FORBIDDEN).send()
                 return

@@ -18,7 +18,7 @@ class Server(private val port: Int) {
         val config = ConfigParser().parse()
         val cpuLimit = Integer.parseInt(config["cpu_limit"])
         val threadPool = ThreadPoolExecutor(cpuLimit, cpuLimit,
-                1L, TimeUnit.MINUTES,
+                30L, TimeUnit.SECONDS,
                 SynchronousQueue())
         while (true) {
             launch(threadPool.asCoroutineDispatcher()) {
@@ -27,10 +27,10 @@ class Server(private val port: Int) {
         }
     }
 
-    private fun analyseRequest(socket: Socket, config: HashMap<String, String>) {
+    private suspend fun analyseRequest(socket: Socket, config: HashMap<String, String>) {
         val requestLine = BufferedReader(InputStreamReader(socket.getInputStream())).readLine()
         if (requestLine != null) {
-            System.out.println("requestLint = " + requestLine)
+            //System.out.println("requestLint = " + requestLine)
             val split = requestLine.split(" ")
             RequestAnalyser(socket, config).analyse(split as ArrayList<String>)
         }
