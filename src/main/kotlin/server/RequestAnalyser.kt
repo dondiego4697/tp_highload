@@ -9,7 +9,7 @@ class RequestAnalyser(private val socket: Socket, private val CONFIG: HashMap<St
     private val availableMethods = arrayListOf("GET", "HEAD")
     private val rootPath = CONFIG["document_root"]
 
-    fun analyse(split: ArrayList<String>) {
+    suspend fun analyse(split: ArrayList<String>) {
         try {
             val method: String = split[0]
             if (availableMethods.indexOf(method) == -1 || split.size < 3) {
