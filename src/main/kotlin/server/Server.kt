@@ -1,8 +1,6 @@
 package server
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.ServerSocket
@@ -19,15 +17,14 @@ class Server(private val port: Int) {
         }
     }
 
-    private fun analyseRequest(socket: Socket, config: HashMap<String, String>) = runBlocking(CommonPool) {
+    private fun analyseRequest(socket: Socket, config: HashMap<String, String>) {
         val requestLine = BufferedReader(InputStreamReader(socket.getInputStream())).readLine()
         if (requestLine != null) {
             //System.out.println("requestLint = " + requestLine)
             val split = requestLine.split(" ")
-            val job = launch(CommonPool) {
+            launch {
                 RequestAnalyser(socket, config).analyse(split as ArrayList<String>)
             }
-            job.join()
         }
     }
 }
