@@ -16,7 +16,8 @@ class Server(private val port: Int) {
         val socketServer = ServerSocket(port)
         val config = ConfigParser().parse()
         val cpus = Runtime.getRuntime().availableProcessors()
-        val threadPool = ThreadPoolExecutor(cpus, Integer.parseInt(config["cpu_limit"]),
+        val cpuT = if (cpus < Integer.parseInt(config["cpu_limit"])) cpus else Integer.parseInt(config["cpu_limit"])
+        val threadPool = ThreadPoolExecutor(cpuT, cpuT,
                 60L, TimeUnit.SECONDS,
                 SynchronousQueue())
         while (true) {
