@@ -5,6 +5,9 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.ServerSocket
 import java.net.Socket
+import java.util.concurrent.SynchronousQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 class Server(private val port: Int) {
 
@@ -12,17 +15,21 @@ class Server(private val port: Int) {
         System.out.println("Server start on $port port")
         val socketServer = ServerSocket(port)
         val config = ConfigParser().parse()
+        val cpus = Runtime.getRuntime().availableProcessors()
+        val threadPool = ThreadPoolExecutor(cpus, Integer.parseInt(config["cpu_limit"]),
+                60L, TimeUnit.SECONDS,
+                SynchronousQueue())
         while (true) {
-            analyseRequest(socketServer.accept(), config)
+            analyseRequest(socketServer.accept(), config, threadPool)
         }
     }
 
-    private fun analyseRequest(socket: Socket, config: HashMap<String, String>) {
+    private fun analyseRequest(socket: Socket, config: HashMap<String, String>, threadPool: ThreadPoolExecutor) {
         val requestLine = BufferedReader(InputStreamReader(socket.getInputStream())).readLine()
         if (requestLine != null) {
             //System.out.println("requestLint = " + requestLine)
             val split = requestLine.split(" ")
-            launch {
+            launch(threadPool.asCoroutineDispatcher()) {
                 RequestAnalyser(socket, config).analyse(split as ArrayList<String>)
             }
         }
