@@ -1,5 +1,6 @@
 /.idea
 /target
 /httptest
+/static
 *.xml
 *.iml

@@ -12,8 +12,8 @@ class ConfigParser {
         val path = "/etc/httpd.conf"
         val confFile = File(path)
         if (!confFile.exists()) {
-            result.put("document_root", "httptest")
-            result.put("cpu_limit", "4")
+            result.put("document_root", "static")
+            result.put("cpu_limit", "3")
             return result
         }
         val lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)

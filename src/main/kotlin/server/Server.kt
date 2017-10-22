@@ -17,6 +17,7 @@ class Server(private val port: Int) {
         val config = ConfigParser().parse()
         val cpus = Runtime.getRuntime().availableProcessors()
         val cpuT = if (cpus < Integer.parseInt(config["cpu_limit"])) cpus else Integer.parseInt(config["cpu_limit"])
+        System.out.println("available = $cpus, got = $cpuT")
         val threadPool = ThreadPoolExecutor(cpuT, cpuT,
                 60L, TimeUnit.SECONDS,
                 SynchronousQueue())
