@@ -1,6 +1,13 @@
 package server
 
+import kotlinx.coroutines.experimental.asCoroutineDispatcher
+import kotlinx.coroutines.experimental.launch
 import java.net.ServerSocket
+import java.net.Socket
+import java.util.concurrent.SynchronousQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 class Server(private val port: Int, private val threadNum: Int, private val root: String) {
 
@@ -8,22 +15,23 @@ class Server(private val port: Int, private val threadNum: Int, private val root
 
     fun start() {
         val serverSocket = ServerSocket(port)
-        val threads: List<Thread> = createThreads(serverSocket)
-        for (thread in threads) {
-            thread.start()
-        }
-        for (thread in threads) {
-            thread.join()
+
+        val threadPool = ThreadPoolExecutor(threadNum, threadNum,
+                60L, TimeUnit.SECONDS,
+                SynchronousQueue())
+        while (true) {
+            val socket: Socket = getSocket(serverSocket)
+            analyseRequest(socket, threadPool)
         }
     }
 
-    private fun createThreads(serverSocket: ServerSocket): List<Thread> {
-        val result: ArrayList<Thread> = ArrayList(0)
-        var i = 0
-        while (i != threadNum) {
-            result.add(Thread(Worker(serverSocket, root, buffSize)))
-            i++
+    private fun analyseRequest(socket: Socket, threadPool: ThreadPoolExecutor) {
+        launch(threadPool.asCoroutineDispatcher()) {
+            RequestAnalyser(socket, root, buffSize).analyse()
         }
-        return result
+    }
+
+    private fun getSocket(serverSocket: ServerSocket): Socket {
+        return serverSocket.accept()
     }
 }
