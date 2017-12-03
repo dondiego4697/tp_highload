@@ -1,23 +1,17 @@
 package server
 
 import kotlinx.coroutines.experimental.launch
-import java.io.IOException
 import java.net.ServerSocket
 import java.net.Socket
 
 class Worker(private val serverSocket: ServerSocket, private val root: String, private val buffSize: Int) : Runnable {
     override fun run() {
-        try {
-            while (true) {
-                val socket: Socket = getSocket()
-                analyseRequest(socket)
-            }
-        } catch (e: IOException) {
-            System.out.println(e)
+        while (true) {
+            val socket: Socket = getSocket()
+            analyseRequest(socket)
         }
     }
 
-    @Throws(IOException::class)
     private fun getSocket(): Socket {
         return serverSocket.accept()
     }
