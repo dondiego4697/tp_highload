@@ -4,3 +4,4 @@
 /static
 *.xml
 *.iml
+.DS_Store

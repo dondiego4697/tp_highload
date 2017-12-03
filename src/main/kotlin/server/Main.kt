@@ -1,15 +1,15 @@
 package server
 
 fun main(args: Array<String>) {
-    var PORT = 80
-    var workers = 1
+    val config = ConfigParser().parse()
+    val port = Integer.parseInt(config["listen"])
+    val root = config["document_root"]
+    val threadNum = Integer.parseInt(config["cpu_limit"])
+    val cpusAvailable = Runtime.getRuntime().availableProcessors()
 
-    for (i in args.indices) {
-        if ("-p" == args[i]) {
-            PORT = args[i + 1].toInt()
-        }
-    }
-    Server(PORT).start()
+    System.out.println("Server start on $port port")
+    System.out.println("available = $cpusAvailable, got = $threadNum")
+    Server(port, threadNum, root!!).start()
 }
 
 

@@ -1,39 +1,29 @@
 package server
 
-import kotlinx.coroutines.experimental.*
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.net.ServerSocket
-import java.net.Socket
-import java.util.concurrent.SynchronousQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
-class Server(private val port: Int) {
+class Server(private val port: Int, private val threadNum: Int, private val root: String) {
+
+    private val buffSize: Int = 10 * 1024 * 1024
 
     fun start() {
-        System.out.println("Server start on $port port")
-        val socketServer = ServerSocket(port)
-        val config = ConfigParser().parse()
-        val cpus = Runtime.getRuntime().availableProcessors()
-        val cpuT = if (cpus < Integer.parseInt(config["cpu_limit"])) cpus else Integer.parseInt(config["cpu_limit"])
-        System.out.println("available = $cpus, got = $cpuT")
-        val threadPool = ThreadPoolExecutor(cpuT, cpuT,
-                60L, TimeUnit.SECONDS,
-                SynchronousQueue())
-        while (true) {
-            analyseRequest(socketServer.accept(), config, threadPool)
+        val serverSocket = ServerSocket(port)
+        val threads: List<Thread> = createThreads(serverSocket)
+        for (thread in threads) {
+            thread.start()
+        }
+        for (thread in threads) {
+            thread.join()
         }
     }
 
-    private fun analyseRequest(socket: Socket, config: HashMap<String, String>, threadPool: ThreadPoolExecutor) {
-        val requestLine = BufferedReader(InputStreamReader(socket.getInputStream())).readLine()
-        if (requestLine != null) {
-            //System.out.println("requestLint = " + requestLine)
-            val split = requestLine.split(" ")
-            launch(threadPool.asCoroutineDispatcher()) {
-                RequestAnalyser(socket, config).analyse(split as ArrayList<String>)
-            }
+    private fun createThreads(serverSocket: ServerSocket): List<Thread> {
+        val result: ArrayList<Thread> = ArrayList(0)
+        var i = 0
+        while (i != threadNum) {
+            result.add(Thread(Worker(serverSocket, root, buffSize)))
+            i++
         }
+        return result
     }
 }

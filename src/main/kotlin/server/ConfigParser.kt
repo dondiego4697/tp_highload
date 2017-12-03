@@ -9,18 +9,11 @@ class ConfigParser {
 
     fun parse(): HashMap<String, String> {
         val result = HashMap<String, String>()
-        val path = "/etc/httpd.conf"
-        val confFile = File(path)
-        if (!confFile.exists()) {
-            result.put("document_root", "static")
-            result.put("cpu_limit", "3")
-            return result
-        }
+        val path = "./httpd.conf"
         val lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)
-        for (line in lines) {
-            val split = line.split(" ")
-            result.put(split[0], split[1])
-        }
+        lines
+                .map { it.split(" ") }
+                .forEach { result.put(it[0], it[1]) }
         return result
     }
 }
