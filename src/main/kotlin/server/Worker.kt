@@ -12,11 +12,12 @@ class Worker(private val serverSocket: ServerSocket, private val root: String, p
                 val socket: Socket = getSocket()
                 analyseRequest(socket)
             }
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             System.out.println(e)
         }
     }
 
+    @Throws(IOException::class)
     private fun getSocket(): Socket {
         return serverSocket.accept()
     }

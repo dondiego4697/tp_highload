@@ -1,7 +1,6 @@
 package server
 
 import java.io.File
-import java.io.FileInputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,23 +17,9 @@ class Response(private val stream: OutputStream, private val status: Status, pri
         getContentType(file.extension)?.let { res.append("Content-Type: $it\r\n\r\n") }
         stream.write(createRes(res))
         if (includeContent) {
-            /*val fis: FileInputStream = file.inputStream()
-            serveFile(fis)*/
             file.inputStream().use { it.copyTo(stream) }
-            /*stream.flush()*/
         }
     }
-
-    /*private fun serveFile(fis: FileInputStream) {
-        val buff = ByteArray(buffSize)
-        var read = 0
-        while (read != -1) {
-            read = fis.read(buff)
-            if (read != -1) {
-                stream.write(buff, 0, read)
-            }
-        }
-    }*/
 
     private fun createRes(res: StringBuilder): ByteArray {
         return res.toString().toByteArray()

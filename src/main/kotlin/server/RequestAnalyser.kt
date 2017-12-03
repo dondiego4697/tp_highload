@@ -11,7 +11,7 @@ class RequestAnalyser(private val socket: Socket, private val root: String, priv
 
     private val availableMethods = arrayListOf("GET", "HEAD")
 
-    suspend fun analyse() {
+     suspend fun analyse() {
         val inputStream = socket.getInputStream()
         val bufferedReader = BufferedReader(InputStreamReader(inputStream))
         val requestLine = bufferedReader.readLine()
