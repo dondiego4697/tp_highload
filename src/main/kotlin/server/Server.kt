@@ -9,11 +9,9 @@ class Server(private val port: Int, private val threadNum: Int, private val root
     fun start() {
         val serverSocket = ServerSocket(port)
         val threads: List<Thread> = createThreads(serverSocket)
-        for (thread in threads) {
-            thread.start()
-        }
-        for (thread in threads) {
-            thread.join()
+        threads.forEach(Thread::start)
+        for (i in 0 until threads.size) {
+            threads[i].join()
         }
     }
 
