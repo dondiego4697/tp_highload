@@ -5,7 +5,7 @@ import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Response(private val stream: OutputStream, private val status: Status, private val buffSize: Int) {
+class Response(private val stream: OutputStream, private val status: Status) {
 
     fun send() {
         stream.write(createRes(baseRes()))

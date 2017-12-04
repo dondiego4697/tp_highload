@@ -7,11 +7,12 @@ import java.net.Socket
 import java.net.URLDecoder
 
 
-class RequestAnalyser(private val socket: Socket, private val root: String, private val buffSize: Int) {
+class RequestAnalyser(private val socket: Socket, private val root: String) {
 
     private val availableMethods = arrayListOf("GET", "HEAD")
 
-     suspend fun analyse() {
+    fun analyse() {
+        //System.out.println(Thread.currentThread().name)
         val inputStream = socket.getInputStream()
         val bufferedReader = BufferedReader(InputStreamReader(inputStream))
         val requestLine = bufferedReader.readLine()
@@ -33,9 +34,9 @@ class RequestAnalyser(private val socket: Socket, private val root: String, priv
             val file = File(url)
             val status: Status = checkFile(file, isIndex)
             if (status == Status.OK) {
-                Response(outputStream, status, buffSize).send(file, "GET" == method)
+                Response(outputStream, status).send(file, "GET" == method)
             } else {
-                Response(outputStream, status, buffSize).send()
+                Response(outputStream, status).send()
             }
         } catch (e: Exception) {
             System.out.println(e)
@@ -64,7 +65,7 @@ class RequestAnalyser(private val socket: Socket, private val root: String, priv
 
     private fun checkMethod(method: String, split: ArrayList<String>): Boolean {
         if (availableMethods.indexOf(method) == -1 || split.size < 3) {
-            Response(socket.getOutputStream(), Status.METHOD_NOT_ALLOWED, buffSize).send()
+            Response(socket.getOutputStream(), Status.METHOD_NOT_ALLOWED).send()
             return false
         }
         return true
